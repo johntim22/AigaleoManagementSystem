@@ -50,18 +50,57 @@ else {
 <br><br>
 <!---main body begins--->
 <div class="container">
-<h3>Welcome <?php echo  $_SESSION["UserFullName"]; ?>!</h3>
-<br><br>
-<div class="card" style="width: 18rem;">
-  <div class="card-body">
-    <h5 class="card-title">Airdrop</h5>
-    <form action="validateairdrop.php" method="POST">
-        <input type="number" id="addtobalance" name="addtobalance">
-        <br><input class="btn btn-primary" type="submit" value="Submit">
-    </form>
-    
-  </div>
-</div>
+<?php
+// Database credentials
+$servername = "localhost"; 
+$username = "root";       
+$password = "";           
+$dbname = "aigaleo";       // Change this to your database name
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// SQL query to select all records from a table (change 'your_table_name' to your table name)
+$sql = "SELECT * FROM blockchain"; // Replace with your actual table name
+$result = $conn->query($sql);
+
+// Start the HTML table
+echo "<table class='table' border='1'>";
+echo "<tr>";
+
+// Get the column names to dynamically generate table headers
+if ($result->num_rows > 0) {
+    // Fetching the column names for the header
+    $fields = $result->fetch_fields();
+    foreach ($fields as $field) {
+        echo "<th>" . htmlspecialchars($field->name) . "</th>";
+    }
+
+    echo "</tr>";
+
+    // Loop through the rows and output data in table rows
+    while($row = $result->fetch_assoc()) {
+        echo "<tr>";
+        foreach ($row as $value) {
+            echo "<td>" . htmlspecialchars($value) . "</td>";
+        }
+        echo "</tr>";
+    }
+
+    // End the table
+    echo "</table>";
+} else {
+    echo "0 results found";
+}
+
+// Close the connection
+$conn->close();
+?>
 </div>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>

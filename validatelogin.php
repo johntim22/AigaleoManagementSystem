@@ -21,8 +21,9 @@ session_start();
 $username2 = $_POST["username"];
 $userpassword = $_POST["userpassword"];
 
+
 // Prepare and execute query to validate username, password, and fetch balance
-$sql = "SELECT username, userbalance FROM users WHERE username = ? AND userpassword = ?";
+$sql = "SELECT username, userbalance, fullname FROM users WHERE username = ? AND userpassword = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("ss", $username2, $userpassword); // "ss" means two strings
 $stmt->execute();
@@ -34,6 +35,17 @@ if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
     $_SESSION["UserName"] = $row["username"];
     $_SESSION["UserBalance"] = $row["userbalance"];
+
+    //Getting the user's full name
+    $sql = "SELECT fullname FROM users where username = ? AND userpassword=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $username2, $userpassword); // "ss" means two strings
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $userfullname = $result;
+
+    //Setting the full name to session
+    $_SESSION["UserFullName"] = $row["fullname"];
     
     echo "Login successful! Welcome, " . $_SESSION["UserName"] . ". Your balance is: " . $_SESSION["UserBalance"];
     

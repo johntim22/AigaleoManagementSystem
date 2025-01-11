@@ -22,7 +22,7 @@ if (isset($_POST["addtobalance"])) {
     $airdrop = $_POST["addtobalance"];
 
     // Validate if the input is numeric (you can extend validation as needed)
-    if (is_numeric($airdrop) && $airdrop > 0) {
+    if (is_numeric($airdrop) && ($airdrop <= 5)) {
         // Prepare and execute query to update user balance
         $sql = "UPDATE users SET userbalance = userbalance + ? WHERE username = ?";
         if ($stmt = $conn->prepare($sql)) {
